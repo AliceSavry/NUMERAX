@@ -3,62 +3,145 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Déverrouillage NUMERAX</title>
+  <title>NUMERAX SYSTEM CONSOLE</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #121212;
-      color: #ffffff;
-      text-align: center;
-      padding: 2em;
+      background-color: black;
+      color: #00FF00;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 20px;
     }
     h1 {
-      color: #00ffd5;
-    }
-    .indices {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin: 2em 0;
-    }
-    .indices input {
-      width: 100px;
-      padding: 0.5em;
-      font-size: 1.2em;
+      color: #00FF00;
       text-align: center;
-      background-color: #1e1e1e;
-      color: #00ffd5;
-      border: 1px solid #00ffd5;
-      border-radius: 5px;
     }
-    .submit-section {
-      margin-top: 2em;
+    .console-line {
+      margin: 10px 0;
     }
-    .submit-section input {
-      font-size: 1.2em;
-      padding: 0.7em 2em;
-      background-color: #00ffd5;
-      color: #121212;
+    .input-section {
+      margin-top: 30px;
+    }
+    .code-block {
+      background-color: #001100;
+      padding: 10px;
+      border-left: 3px solid #00FF00;
+      margin-bottom: 20px;
+    }
+    .code-block input {
+      background-color: black;
       border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      border-bottom: 1px solid #00FF00;
+      color: #00FF00;
+      font-size: 1.1em;
+      width: 100%;
+    }
+    .code-block input:focus {
+      outline: none;
+    }
+    .feedback {
+      margin-top: 10px;
+      color: red;
     }
   </style>
 </head>
 <body>
-  <h1>🧠 Interface de déverrouillage du système NUMERAX</h1>
-  <p>Entrez les 6 indices récupérés :</p>
-  <div class="indices">
-    <input type="text" maxlength="15" placeholder="Indice 1">
-    <input type="text" maxlength="15" placeholder="Indice 2">
-    <input type="text" maxlength="15" placeholder="Indice 3">
-    <input type="text" maxlength="15" placeholder="Indice 4">
-    <input type="text" maxlength="15" placeholder="Indice 5">
-    <input type="text" maxlength="15" placeholder="Indice 6">
+  <h1>NUMERAX SYSTEM CONSOLE</h1>
+
+  <div class="console-line">&gt; INITIALISATION DU SYSTEME D'INFORMATION EN COURS...</div>
+  <div class="console-line">&gt; VERIFICATION DES MODULES...</div>
+
+  <div id="console-output">
+    <div class="console-line" id="prompt"></div>
+    <div class="code-block" id="riddle"></div>
+    <div class="input-section">
+      <input type="text" id="codeInput" placeholder="ENTRER LE CODE">
+      <button onclick="checkCode()">VALIDER</button>
+    </div>
+    <div class="console-line" id="response"></div>
   </div>
-  <div class="submit-section">
-    <p>Saisissez le mot-clé final :</p>
-    <input type="text" maxlength="20" placeholder="MOT-CLÉ">
-  </div>
+
+  <script>
+    const riddles = [
+      "Je suis le gardien des comptes, le stratège financier,\nJe veille sur les bilans, rien ne peut m’échapper.\nPlan comptable en main, je suis votre allié,\nQuel est mon nom dans cet organigramme codé ?",
+      "Je vais de service en service sans jamais me fatiguer,\nJe transporte les données comme un courrier pressé.\nSans moi, pas de chiffre, pas d’état, pas de vérité.\nQui suis-je dans ce grand ballet ?",
+      "J’orchestre les chiffres, je contrôle les flux,\nJe parle aux banques, aux RH et même aux stocks en surplus.\nJe suis souvent silencieux mais toujours central,\nSans moi, vos comptes partent vite en cavale…\nQui suis-je ?",
+      "Dans l’ombre je veille, silencieux mais utile,\nJe conserve vos preuves, vos chiffres les plus volatils.\nConsultable à tout moment, je suis la mémoire habile,\nQuel est mon rôle, aussi vieux qu’infaillible ?",
+      "Je suis le mur invisible, je veille sur les données.\nJe protège les accès, même la nuit tombée.\nSans moi, votre SIC serait vite infecté.\nQuel est mon nom, à retenir pour ne pas l’oublier ?",
+      "Je permets de décider, de corriger, d’anticiper.\nMes colonnes parlent, mes lignes alertent.\nJe suis le reflet chiffré de votre activité.\nQui suis-je ?"
+    ];
+
+    const expectedCodes = ["DAF", "FLUX", "PGI", "ARCHIVAGE", "SECURITE", "TABLEAU"];
+    let currentStep = 0;
+
+    document.getElementById("prompt").textContent = "> CODE 1 REQUIS :";
+    document.getElementById("riddle").textContent = riddles[0];
+
+    function checkCode() {
+      const input = document.getElementById("codeInput").value.trim().toUpperCase();
+      const response = document.getElementById("response");
+      const prompt = document.getElementById("prompt");
+      const riddle = document.getElementById("riddle");
+
+      if (input === expectedCodes[currentStep]) {
+        response.textContent = `✔ CODE ${currentStep + 1} VALIDE`;
+        currentStep++;
+        if (currentStep < expectedCodes.length) {
+          prompt.textContent = `> CODE ${currentStep + 1} REQUIS :`;
+          riddle.textContent = riddles[currentStep];
+          document.getElementById("codeInput").value = "";
+        } else {
+          prompt.textContent = "> TOUS LES CODES VALIDES. SAISISSEZ LE MOT DE PASSE FINAL :";
+          riddle.textContent = "Tapez le mot de passe pour réactiver le SYSTÈME.";
+          document.getElementById("codeInput").value = "";
+          document.querySelector("button").onclick = checkFinalPassword;
+        }
+      } else {
+        response.textContent = "❌ ERREUR : LE MOT-CLÉ N'EST PAS LE BON ! RECOMMENCEZ.";
+      }
+    }
+
+    function checkFinalPassword() {
+      const input = document.getElementById("codeInput").value.trim().toUpperCase();
+      const response = document.getElementById("response");
+
+      if (input === "SYSTEME3") {
+        response.textContent = "✅ MOT DE PASSE CORRECT. LE SYSTÈME NUMERAX EST RÉACTIVÉ.";
+
+        // Affichage feu d'artifice
+        const canvas = document.createElement('canvas');
+        canvas.id = 'fireworks';
+        canvas.style.position = 'fixed';
+        canvas.style.top = 0;
+        canvas.style.left = 0;
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.zIndex = 9999;
+        document.body.appendChild(canvas);
+
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function drawFirework() {
+          for (let i = 0; i < 100; i++) {
+            ctx.beginPath();
+            ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 2, 0, 2 * Math.PI);
+            ctx.fillStyle = 'lime';
+            ctx.fill();
+          }
+        }
+        drawFirework();
+
+        // Interface PGI simulée
+        document.getElementById("console-output").innerHTML = `
+          <h2 style='color: lime;'>Bienvenue dans le PGI de NUMERAX</h2>
+          <p style='color: lime;'>Tous les modules sont opérationnels.</p>
+          <button onclick="location.reload()" style='padding: 1em; font-size: 1.2em; background-color: #00FF00; color: black; border: none; cursor: pointer; margin-top: 2em;'>ÉTEINDRE LE SYSTÈME</button>
+        `;
+      } else {
+        response.textContent = "❌ MOT DE PASSE INCORRECT. ACCÈS REFUSÉ.";
+      }
+    }
+  </script>
 </body>
 </html>
