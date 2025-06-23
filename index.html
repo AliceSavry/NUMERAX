@@ -32,6 +32,10 @@
       color: black;
       font-weight: bold;
     }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
   </style>
 </head>
 <body>
@@ -83,9 +87,8 @@
     function printHighlighted(indice, highlight) {
       const line = document.createElement("div");
       line.className = "console-line";
-      line.innerHTML = `> Indice trouvé : ` +
-        indice.split("").map(char => char.toUpperCase() === highlight.letter ? `<span class="highlight">${char}</span>` : char).join("") +
-        ` (chiffres : ${highlight.indices.join(", ")})`;
+      const formatted = indice.split("").map(char => char.toUpperCase() === highlight.letter ? `<span class="highlight">${char}</span>` : char).join("");
+      line.innerHTML = `> Indice trouvé : ${formatted} (${highlight.indices.join(", ")})`;
       output.appendChild(line);
       window.scrollTo(0, document.body.scrollHeight);
     }
@@ -140,7 +143,7 @@
     }
 
     function bootPGI() {
-      document.body.innerHTML = `...`; // raccourci ici
+      document.body.innerHTML = `...`;
     }
 
     window.onload = function() {
