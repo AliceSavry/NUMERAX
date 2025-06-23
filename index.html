@@ -145,7 +145,80 @@
     }
 
     function bootPGI() {
-      document.body.innerHTML = `...`;
+      document.body.innerHTML = `
+        <style>
+          body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            text-align: center;
+            padding: 2em;
+          }
+          .progress-bar {
+            width: 80%;
+            background-color: #ddd;
+            margin: 2em auto;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+          }
+          .progress {
+            height: 100%;
+            width: 0;
+            background-color: #28a745;
+            animation: load 2s forwards;
+          }
+          @keyframes load {
+            to { width: 100%; }
+          }
+          .pgi-interface {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+          }
+          .menu {
+            display: flex;
+            gap: 1em;
+            margin-bottom: 2em;
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+          .menu button {
+            background-color: #007bff;
+            color: white;
+            padding: 0.75em 1.5em;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+          }
+          .shutdown-btn {
+            background-color: #dc3545;
+            margin-top: 3em;
+          }
+        </style>
+        <h1>Chargement du système NUMERAX...</h1>
+        <div class="progress-bar"><div class="progress"></div></div>
+        <div class="pgi-interface">
+          <h2>Bienvenue dans le PGI NUMERAX</h2>
+          <div class="menu">
+            <button>Facturation</button>
+            <button>Devis</button>
+            <button>Comptabilité</button>
+            <button>Paye</button>
+            <button>Tableaux de suivi</button>
+          </div>
+          <button class="shutdown-btn" onclick="window.close()">Éteindre le système</button>
+        </div>
+        <script>
+          setTimeout(() => {
+            document.querySelector('.progress-bar').style.display = 'none';
+            document.querySelector('h1').style.display = 'none';
+            document.querySelector('.pgi-interface').style.display = 'flex';
+          }, 2000);
+        </script>
+      `;
     }
 
     window.onload = function() {
