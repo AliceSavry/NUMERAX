@@ -62,6 +62,12 @@
 
   <script>
     const riddles = [
+      "[ACTIVITÉ] Qui est la Directrice Administrative et Financière responsable du pilotage des données comptables ?",
+      "[ACTIVITÉ] Quel est le nom du flux qui permet d’éditer les documents de synthèse dans le PGI ?",
+      "[ACTIVITÉ] Quel outil avez-vous utilisé pour réaliser les tableaux croisés dynamiques ?",
+      "[ACTIVITÉ] Pour fiabiliser le SIC, quelle priorité avez-vous identifiée dans votre rapport ?",
+      "[ACTIVITÉ] Quel outil avez-vous recommandé d’installer pour prévenir les intrusions dans le système ?",
+      "[ACTIVITÉ] Quel outil est commun à plusieurs activités et permet de construire des indicateurs clés de performance ?",
       "Je suis le gardien des comptes, le stratège financier,\nJe veille sur les bilans, rien ne peut m’échapper.\nPlan comptable en main, je suis votre allié,\nQuel est mon nom dans cet organigramme codé ?",
       "Je vais de service en service sans jamais me fatiguer,\nJe transporte les données comme un courrier pressé.\nSans moi, pas de chiffre, pas d’état, pas de vérité.\nQui suis-je dans ce grand ballet ?",
       "J’orchestre les chiffres, je contrôle les flux,\nJe parle aux banques, aux RH et même aux stocks en surplus.\nJe suis souvent silencieux mais toujours central,\nSans moi, vos comptes partent vite en cavale…\nQui suis-je ?",
@@ -70,11 +76,11 @@
       "Je permets de décider, de corriger, d’anticiper.\nMes colonnes parlent, mes lignes alertent.\nJe suis le reflet chiffré de votre activité.\nQui suis-je ?"
     ];
 
-    const expectedCodes = ["DAF", "FLUX", "PGI", "ARCHIVAGE", "SECURITE", "TABLEAU"];
+    const expectedCodes = ["SOPHIE", "SYNTHESE", "TABLEUR", "SECURITE", "ANTIVIRUS", "TABLEUR"];
     let currentStep = 0;
 
     document.getElementById("prompt").textContent = "> CODE 1 REQUIS :";
-    document.getElementById("riddle").textContent = riddles[0];
+    typeText(document.getElementById("riddle"), riddles[0]);
 
     function checkCode() {
       const input = document.getElementById("codeInput").value.trim().toUpperCase();
@@ -87,9 +93,15 @@
         currentStep++;
         if (currentStep < expectedCodes.length) {
           prompt.textContent = `> CODE ${currentStep + 1} REQUIS :`;
-          riddle.textContent = riddles[currentStep];
+          typeText(riddle, riddles[currentStep]);
           document.getElementById("codeInput").value = "";
         } else {
+          prompt.textContent = "> TOUS LES CODES VALIDES. SAISISSEZ LE MOT DE PASSE FINAL :";
+          typeText(riddle, "[ACTIVITÉ GLOBALE] À partir de tous les éléments trouvés, quel est le nom de l’élément central du SIC que vous venez de réactiver ?");
+          document.getElementById("codeInput").value = "";
+          document.querySelector("button").onclick = checkFinalPassword;
+        }
+      } else {
           prompt.textContent = "> TOUS LES CODES VALIDES. SAISISSEZ LE MOT DE PASSE FINAL :";
           riddle.textContent = "Tapez le mot de passe pour réactiver le SYSTÈME.";
           document.getElementById("codeInput").value = "";
@@ -104,7 +116,7 @@
       const input = document.getElementById("codeInput").value.trim().toUpperCase();
       const response = document.getElementById("response");
 
-      if (input === "SYSTEME3") {
+      if (input === "SYSTEME") {
         response.textContent = "✅ MOT DE PASSE CORRECT. LE SYSTÈME NUMERAX EST RÉACTIVÉ.";
 
         // Affichage feu d'artifice
@@ -136,11 +148,32 @@
         document.getElementById("console-output").innerHTML = `
           <h2 style='color: lime;'>Bienvenue dans le PGI de NUMERAX</h2>
           <p style='color: lime;'>Tous les modules sont opérationnels.</p>
-          <button onclick="location.reload()" style='padding: 1em; font-size: 1.2em; background-color: #00FF00; color: black; border: none; cursor: pointer; margin-top: 2em;'>ÉTEINDRE LE SYSTÈME</button>
+          <div style='margin-top: 2em;'>
+            <ul style='list-style: none; padding: 0; color: lime; font-size: 1.2em;'>
+              <li>&gt; FACTURATION</li>
+              <li>&gt; DEVIS</li>
+              <li>&gt; COMPTABILITÉ</li>
+              <li>&gt; PAYE</li>
+              <li>&gt; TABLEAUX DE SUIVI</li>
+            </ul>
+          </div>
+          <button onclick="window.close()" style='padding: 1em; font-size: 1.2em; background-color: #00FF00; color: black; border: none; cursor: pointer; margin-top: 2em;'>ÉTEINDRE LE SYSTÈME</button>
         `;
       } else {
         response.textContent = "❌ MOT DE PASSE INCORRECT. ACCÈS REFUSÉ.";
       }
+    }
+  function typeText(element, text, delay = 25) {
+      element.textContent = "";
+      let i = 0;
+      function typeChar() {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+          setTimeout(typeChar, delay);
+        }
+      }
+      typeChar();
     }
   </script>
 </body>
