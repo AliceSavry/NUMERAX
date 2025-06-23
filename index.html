@@ -57,7 +57,7 @@
     const output = document.getElementById("console-output");
     const inputLine = document.getElementById("input-line");
 
-    function printAnimatedLine(text) {
+    function printAnimatedLine(text, callback) {
       const div = document.createElement("div");
       div.className = "console-line";
       output.appendChild(div);
@@ -65,19 +65,24 @@
       const interval = setInterval(() => {
         div.textContent += text[i];
         i++;
-        if (i >= text.length) clearInterval(interval);
+        if (i >= text.length) {
+          clearInterval(interval);
+          if (callback) callback();
+        }
         window.scrollTo(0, document.body.scrollHeight);
       }, 25);
     }
 
     function askRiddle() {
-      printAnimatedLine(`> CODE ${currentStep + 1} REQUIS :`);
-      setTimeout(() => printAnimatedLine(`> ${riddles[currentStep]}`), 1000);
+      printAnimatedLine(`> CODE ${currentStep + 1} REQUIS :`, () => {
+        setTimeout(() => printAnimatedLine(`> ${riddles[currentStep]}`), 250);
+      });
     }
 
     function askFinal() {
-      printAnimatedLine("> TOUS LES CODES VALIDES. SAISISSEZ LE MOT DE PASSE FINAL :");
-      setTimeout(() => printAnimatedLine("> [ACTIVITÉ GLOBALE] À partir de tous les éléments trouvés, quel est le nom de l’élément central du SIC que vous venez de réactiver ?"), 1000);
+      printAnimatedLine("> TOUS LES CODES VALIDES. SAISISSEZ LE MOT DE PASSE FINAL :", () => {
+        setTimeout(() => printAnimatedLine("> [ACTIVITÉ GLOBALE] À partir de tous les éléments trouvés, quel est le nom de l’élément central du SIC que vous venez de réactiver ?"), 250);
+      });
     }
 
     document.addEventListener("keydown", e => {
@@ -96,13 +101,14 @@
     function handleInput(code) {
       if (currentStep < expectedCodes.length) {
         if (code === expectedCodes[currentStep]) {
-          printAnimatedLine(`> ✔ CODE ${currentStep + 1} VALIDE`);
-          currentStep++;
-          if (currentStep < expectedCodes.length) {
-            setTimeout(askRiddle, 1000);
-          } else {
-            setTimeout(askFinal, 1000);
-          }
+          printAnimatedLine(`> ✔ CODE ${currentStep + 1} VALIDE`, () => {
+            currentStep++;
+            if (currentStep < expectedCodes.length) {
+              setTimeout(askRiddle, 500);
+            } else {
+              setTimeout(askFinal, 500);
+            }
+          });
         } else {
           printAnimatedLine("> ❌ ERREUR : LE MOT-CLÉ N'EST PAS LE BON ! RECOMMENCEZ.");
         }
@@ -117,45 +123,47 @@
 
     function bootPGI() {
       document.body.innerHTML = `
-      <style>
-        body {
-          background-color: #f8f9fa;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-          color: #212529;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 100vh;
-          margin: 0;
-          text-align: center;
-        }
-        .progress {
-          width: 80%;
-          max-width: 400px;
-          background-color: #e9ecef;
-          border-radius: 5px;
-          overflow: hidden;
-          margin-top: 2em;
-        }
-        .progress-bar {
-          height: 25px;
-          width: 0;
-          background-color: #007aff;
-          transition: width 2s;
-        }
-      </style>
-      <h2>Démarrage du PGI NUMERAX...</h2>
-      <div class="progress">
-        <div class="progress-bar" id="progress-bar"></div>
-      </div>
-      <script>
-        const bar = document.getElementById("progress-bar");
+        <style>
+          body {
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #212529;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+          }
+          .progress {
+            width: 80%;
+            max-width: 400px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 2em;
+          }
+          .progress-bar {
+            height: 25px;
+            width: 0;
+            background-color: #007aff;
+            transition: width 2s;
+          }
+        </style>
+        <h2>Démarrage du PGI NUMERAX...</h2>
+        <div class="progress">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>`;
+
+      const bar = document.createElement("script");
+      bar.textContent = `
+        const pbar = document.getElementById("progress-bar");
         setTimeout(() => {
-          bar.style.width = "100%";
+          pbar.style.width = "100%";
         }, 100);
         setTimeout(() => {
-          document.body.innerHTML = `
+          document.body.innerHTML = ` + JSON.stringify(`
             <div style='text-align:center; max-width:900px; margin:auto; padding:2em;'>
               <h2 style='color:#007aff;'>Bienvenue dans le PGI de NUMERAX</h2>
               <div style='display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1em; margin-top:3em;'>
@@ -168,13 +176,15 @@
               <button onclick='window.close()' style='margin-top:3em; padding:1em 2em; font-size:1.2em; background:#dc3545; color:white; border:none; border-radius:5px;'>Éteindre le système</button>
             </div>`
         }, 2500);
-      </script>
       `;
+      document.body.appendChild(bar);
     }
 
-    printAnimatedLine("> INITIALISATION DU SYSTEME D'INFORMATION EN COURS...");
-    setTimeout(() => printAnimatedLine("> VERIFICATION DES MODULES..."), 1000);
-    setTimeout(askRiddle, 2000);
+    printAnimatedLine("> INITIALISATION DU SYSTEME D'INFORMATION EN COURS...", () => {
+      setTimeout(() => printAnimatedLine("> VERIFICATION DES MODULES...", () => {
+        setTimeout(askRiddle, 1000);
+      }), 1000);
+    });
   </script>
 </body>
 </html>
