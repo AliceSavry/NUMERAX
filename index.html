@@ -69,17 +69,17 @@
       "[ACTIVITÉ] Quel outil avez-vous utilisé pour réaliser les tableaux croisés dynamiques ?",
       "[ACTIVITÉ] Pour fiabiliser le SIC, quelle priorité avez-vous identifiée dans votre rapport ?",
       "[ACTIVITÉ] Quel outil avez-vous recommandé d’installer pour prévenir les intrusions dans le système ?",
-      "[ACTIVITÉ] Quel outil est commun à plusieurs activités et permet de construire des indicateurs clés de performance ?"
+      "[ACTIVITÉ] Quel outil est couramment utilisé pour communiquer entre services dans le SIC ?"
     ];
 
-    const expectedCodes = ["SOPHIE", "SYNTHESE", "TABLEUR", "SECURITE", "ANTIVIRUS", "TABLEUR"];
+    const expectedCodes = ["SOPHIE", "SYNTHESE", "TABLEUR", "SECURITE", "ANTIVIRUS", "MAIL"];
     const highlights = [
       { letter: "S", indices: [1, 3] },
       { letter: "Y", indices: [2] },
       { letter: "T", indices: [4] },
-      { letter: "E", indices: [5, 6] },
+      { letter: "E", indices: [5, 7] },
       { letter: "T", indices: [4] },
-      { letter: "T", indices: [4] }
+      { letter: "M", indices: [6] }
     ];
 
     let currentStep = 0;
