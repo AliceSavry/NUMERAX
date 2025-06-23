@@ -75,7 +75,7 @@
       output.appendChild(div);
       let i = 0;
       const interval = setInterval(() => {
-        div.textContent += text[i];
+        div.innerHTML += text[i];
         i++;
         if (i >= text.length) {
           clearInterval(interval);
@@ -89,7 +89,7 @@
       const line = document.createElement("div");
       line.className = "console-line";
       const formatted = indice.split("").map(char => char.toUpperCase() === highlight.letter ? `<span class="highlight">${char}</span>` : char).join("");
-      line.innerHTML = `> Indice trouvé : ${formatted} (${highlight.indices.join(", ")})`;
+      line.innerHTML = `> Indice trouvé : ${formatted} ${highlight.indices.join(" ")}`;
       output.appendChild(line);
       window.scrollTo(0, document.body.scrollHeight);
     }
