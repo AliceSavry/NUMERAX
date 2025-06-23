@@ -102,6 +102,9 @@
           document.querySelector("button").onclick = checkFinalPassword;
         }
       } else {
+        response.textContent = "❌ ERREUR : LE MOT-CLÉ N'EST PAS LE BON ! RECOMMENCEZ.";
+        document.getElementById("codeInput").value = "";
+      }
           prompt.textContent = "> TOUS LES CODES VALIDES. SAISISSEZ LE MOT DE PASSE FINAL :";
           riddle.textContent = "Tapez le mot de passe pour réactiver le SYSTÈME.";
           document.getElementById("codeInput").value = "";
