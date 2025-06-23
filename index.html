@@ -20,6 +20,9 @@
     }
     .input-section {
       margin-top: 30px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
     }
     .code-block {
       background-color: #001100;
@@ -33,7 +36,7 @@
       border-bottom: 1px solid #00FF00;
       color: #00FF00;
       font-size: 1.1em;
-      width: 100%;
+      width: 300px;
     }
     .code-block input:focus {
       outline: none;
@@ -41,6 +44,19 @@
     .feedback {
       margin-top: 10px;
       color: red;
+    }
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1em;
+      background-color: #00FF00;
+      animation: blink 1s steps(2, start) infinite;
+      vertical-align: bottom;
+    }
+    @keyframes blink {
+      to {
+        visibility: hidden;
+      }
     }
   </style>
 </head>
@@ -55,6 +71,7 @@
     <div class="code-block" id="riddle"></div>
     <div class="input-section">
       <input type="text" id="codeInput" placeholder="ENTRER LE CODE">
+      <span class="cursor"></span>
       <button onclick="checkCode()">VALIDER</button>
     </div>
     <div class="console-line" id="response"></div>
@@ -67,13 +84,7 @@
       "[ACTIVITÉ] Quel outil avez-vous utilisé pour réaliser les tableaux croisés dynamiques ?",
       "[ACTIVITÉ] Pour fiabiliser le SIC, quelle priorité avez-vous identifiée dans votre rapport ?",
       "[ACTIVITÉ] Quel outil avez-vous recommandé d’installer pour prévenir les intrusions dans le système ?",
-      "[ACTIVITÉ] Quel outil est commun à plusieurs activités et permet de construire des indicateurs clés de performance ?",
-      "Je suis le gardien des comptes, le stratège financier,\nJe veille sur les bilans, rien ne peut m’échapper.\nPlan comptable en main, je suis votre allié,\nQuel est mon nom dans cet organigramme codé ?",
-      "Je vais de service en service sans jamais me fatiguer,\nJe transporte les données comme un courrier pressé.\nSans moi, pas de chiffre, pas d’état, pas de vérité.\nQui suis-je dans ce grand ballet ?",
-      "J’orchestre les chiffres, je contrôle les flux,\nJe parle aux banques, aux RH et même aux stocks en surplus.\nJe suis souvent silencieux mais toujours central,\nSans moi, vos comptes partent vite en cavale…\nQui suis-je ?",
-      "Dans l’ombre je veille, silencieux mais utile,\nJe conserve vos preuves, vos chiffres les plus volatils.\nConsultable à tout moment, je suis la mémoire habile,\nQuel est mon rôle, aussi vieux qu’infaillible ?",
-      "Je suis le mur invisible, je veille sur les données.\nJe protège les accès, même la nuit tombée.\nSans moi, votre SIC serait vite infecté.\nQuel est mon nom, à retenir pour ne pas l’oublier ?",
-      "Je permets de décider, de corriger, d’anticiper.\nMes colonnes parlent, mes lignes alertent.\nJe suis le reflet chiffré de votre activité.\nQui suis-je ?"
+      "[ACTIVITÉ] Quel outil est commun à plusieurs activités et permet de construire des indicateurs clés de performance ?"
     ];
 
     const expectedCodes = ["SOPHIE", "SYNTHESE", "TABLEUR", "SECURITE", "ANTIVIRUS", "TABLEUR"];
@@ -81,6 +92,13 @@
 
     document.getElementById("prompt").textContent = "> CODE 1 REQUIS :";
     typeText(document.getElementById("riddle"), riddles[0]);
+
+    function typeText(el, text, i = 0) {
+      el.textContent = text.substring(0, i);
+      if (i < text.length) {
+        setTimeout(() => typeText(el, text, i + 1), 25);
+      }
+    }
 
     function checkCode() {
       const input = document.getElementById("codeInput").value.trim().toUpperCase();
@@ -105,78 +123,25 @@
         response.textContent = "❌ ERREUR : LE MOT-CLÉ N'EST PAS LE BON ! RECOMMENCEZ.";
         document.getElementById("codeInput").value = "";
       }
-          prompt.textContent = "> TOUS LES CODES VALIDES. SAISISSEZ LE MOT DE PASSE FINAL :";
-          riddle.textContent = "Tapez le mot de passe pour réactiver le SYSTÈME.";
-          document.getElementById("codeInput").value = "";
-          document.querySelector("button").onclick = checkFinalPassword;
-        }
-      } else {
-        response.textContent = "❌ ERREUR : LE MOT-CLÉ N'EST PAS LE BON ! RECOMMENCEZ.";
-      }
     }
 
     function checkFinalPassword() {
       const input = document.getElementById("codeInput").value.trim().toUpperCase();
-      const response = document.getElementById("response");
-
       if (input === "SYSTEME") {
-        response.textContent = "✅ MOT DE PASSE CORRECT. LE SYSTÈME NUMERAX EST RÉACTIVÉ.";
-
-        // Affichage feu d'artifice
-        const canvas = document.createElement('canvas');
-        canvas.id = 'fireworks';
-        canvas.style.position = 'fixed';
-        canvas.style.top = 0;
-        canvas.style.left = 0;
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        canvas.style.zIndex = 9999;
-        document.body.appendChild(canvas);
-
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        function drawFirework() {
-          for (let i = 0; i < 100; i++) {
-            ctx.beginPath();
-            ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 2, 0, 2 * Math.PI);
-            ctx.fillStyle = 'lime';
-            ctx.fill();
-          }
-        }
-        drawFirework();
-
-        // Interface PGI simulée
-        document.getElementById("console-output").innerHTML = `
-          <h2 style='color: lime;'>Bienvenue dans le PGI de NUMERAX</h2>
-          <p style='color: lime;'>Tous les modules sont opérationnels.</p>
-          <div style='margin-top: 2em;'>
-            <ul style='list-style: none; padding: 0; color: lime; font-size: 1.2em;'>
-              <li>&gt; FACTURATION</li>
-              <li>&gt; DEVIS</li>
-              <li>&gt; COMPTABILITÉ</li>
-              <li>&gt; PAYE</li>
-              <li>&gt; TABLEAUX DE SUIVI</li>
-            </ul>
-          </div>
-          <button onclick="window.close()" style='padding: 1em; font-size: 1.2em; background-color: #00FF00; color: black; border: none; cursor: pointer; margin-top: 2em;'>ÉTEINDRE LE SYSTÈME</button>
-        `;
+        document.body.innerHTML = '<h2 style="color: lime;">Bienvenue dans le PGI de NUMERAX</h2>' +
+                                  '<p style="color: lime;">Tous les modules sont opérationnels.</p>' +
+                                  '<ul style="list-style: none; padding: 0; color: lime; font-size: 1.2em;">' +
+                                  '<li>&gt; FACTURATION</li>' +
+                                  '<li>&gt; DEVIS</li>' +
+                                  '<li>&gt; COMPTABILITÉ</li>' +
+                                  '<li>&gt; PAYE</li>' +
+                                  '<li>&gt; TABLEAUX DE SUIVI</li>' +
+                                  '</ul>' +
+                                  '<button onclick="window.close()" style="padding: 1em; font-size: 1.2em; background-color: #00FF00; color: black; border: none; cursor: pointer; margin-top: 2em;">ÉTEINDRE LE SYSTÈME</button>';
       } else {
-        response.textContent = "❌ MOT DE PASSE INCORRECT. ACCÈS REFUSÉ.";
+        document.getElementById("response").textContent = "❌ MOT DE PASSE INCORRECT. RECOMMENCEZ.";
+        document.getElementById("codeInput").value = "";
       }
-    }
-  function typeText(element, text, delay = 25) {
-      element.textContent = "";
-      let i = 0;
-      function typeChar() {
-        if (i < text.length) {
-          element.textContent += text.charAt(i);
-          i++;
-          setTimeout(typeChar, delay);
-        }
-      }
-      typeChar();
     }
   </script>
 </body>
