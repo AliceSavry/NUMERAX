@@ -32,6 +32,26 @@
       color: black;
       font-weight: bold;
     }
+    .congrats {
+      text-align: center;
+      margin-top: 50px;
+    }
+    .congrats h2 {
+      color: #00FF00;
+    }
+    .congrats a {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #00FF00;
+      color: black;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .congrats img {
+      max-width: 100%;
+      margin-top: 20px;
+    }
     @keyframes blink {
       0%, 100% { opacity: 1; }
       50% { opacity: 0; }
@@ -137,15 +157,27 @@
         }
       } else {
         if (code === "SYSTEME") {
-          bootPGI();
+          displayCongrats();
         } else {
           printAnimatedLine("> ❌ MOT DE PASSE INCORRECT. RECOMMENCEZ.");
         }
       }
     }
 
-    function bootPGI() {
-      window.location.href = "https://mescoursdegestion.notion.site/BTS-CG-P5-P6-P7-1c8d1f3f34b180efabd2c8ed22be783f?source=copy_link";
+    function displayCongrats() {
+      fetch('https://api.giphy.com/v1/gifs/search?api_key=i7DN7Y5grWRR8hTP53hOgF2KEboVz7v6&q=congratulations&limit=10')
+        .then(response => response.json())
+        .then(result => {
+          const gifUrl = result.data[Math.floor(Math.random() * result.data.length)].images.original.url;
+          document.body.innerHTML = `
+            <div class="congrats">
+              <h2>🎉 Félicitations ! Le système NUMERAX est réactivé. 🎉</h2>
+              <p>Vous avez brillamment mené votre mission à son terme.</p>
+              <img src="${gifUrl}" alt="GIF de félicitations">
+              <a href="https://mescoursdegestion.notion.site/BTS-CG-P5-P6-P7-1c8d1f3f34b180efabd2c8ed22be783f?source=copy_link" target="_blank">Revenir à la page de cours</a>
+            </div>
+          `;
+        });
     }
 
     window.onload = function() {
