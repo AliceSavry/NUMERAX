@@ -49,7 +49,7 @@
       font-weight: bold;
     }
     .congrats img {
-      max-width: 100%;
+      max-width: 80%;
       margin-top: 20px;
     }
     @keyframes blink {
@@ -168,15 +168,22 @@
       fetch('https://api.giphy.com/v1/gifs/search?api_key=i7DN7Y5grWRR8hTP53hOgF2KEboVz7v6&q=congratulations&limit=10')
         .then(response => response.json())
         .then(result => {
-          const gifUrl = result.data[Math.floor(Math.random() * result.data.length)].images.original.url;
-          document.body.innerHTML = `
-            <div class="congrats">
-              <h2>🎉 Félicitations ! Le système NUMERAX est réactivé. 🎉</h2>
-              <p>Vous avez brillamment mené votre mission à son terme.</p>
-              <img src="${gifUrl}" alt="GIF de félicitations">
-              <a href="https://mescoursdegestion.notion.site/BTS-CG-P5-P6-P7-1c8d1f3f34b180efabd2c8ed22be783f?source=copy_link" target="_blank">Revenir à la page de cours</a>
-            </div>
-          `;
+          if (result.data.length > 0) {
+            const gifUrl = result.data[Math.floor(Math.random() * result.data.length)].images.original.url;
+            document.body.innerHTML = `
+              <div class="congrats">
+                <h2>🎉 Félicitations ! Le système NUMERAX est réactivé. 🎉</h2>
+                <p>Vous avez brillamment mené votre mission à son terme.</p>
+                <img src="${gifUrl}" alt="GIF de félicitations">
+                <a href="https://mescoursdegestion.notion.site/BTS-CG-P5-P6-P7-1c8d1f3f34b180efabd2c8ed22be783f?source=copy_link" target="_blank">Revenir à la page de cours</a>
+              </div>
+            `;
+          } else {
+            document.body.innerHTML = `<div class='congrats'><h2>🎉 Félicitations !</h2><p>Mais aucun GIF n'a pu être chargé. 🫤</p></div>`;
+          }
+        })
+        .catch(() => {
+          document.body.innerHTML = `<div class='congrats'><h2>🎉 Félicitations !</h2><p>Une erreur est survenue lors du chargement du GIF. 🫤</p></div>`;
         });
     }
 
