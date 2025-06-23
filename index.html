@@ -36,10 +36,8 @@
 </head>
 <body>
   <h1>NUMERAX SYSTEM CONSOLE</h1>
-
   <div id="console-output"></div>
   <div class="console-line">&gt; <span id="input-line"></span><span class="cursor"></span></div>
-
   <script>
     const riddles = [
       "[ACTIVITÉ] Qui est la Directrice Administrative et Financière responsable du pilotage des données comptables ?",
@@ -156,28 +154,24 @@
           <div class="progress-bar" id="progress-bar"></div>
         </div>`;
 
-      const bar = document.createElement("script");
-      bar.textContent = `
-        const pbar = document.getElementById("progress-bar");
-        setTimeout(() => {
-          pbar.style.width = "100%";
-        }, 100);
-        setTimeout(() => {
-          document.body.innerHTML = ` + JSON.stringify(`
-            <div style='text-align:center; max-width:900px; margin:auto; padding:2em;'>
-              <h2 style='color:#007aff;'>Bienvenue dans le PGI de NUMERAX</h2>
-              <div style='display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1em; margin-top:3em;'>
-                <button style='padding:1em; font-size:1em; border:none; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;'>Facturation</button>
-                <button style='padding:1em; font-size:1em; border:none; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;'>Devis</button>
-                <button style='padding:1em; font-size:1em; border:none; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;'>Comptabilité</button>
-                <button style='padding:1em; font-size:1em; border:none; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;'>Paye</button>
-                <button style='padding:1em; font-size:1em; border:none; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;'>Tableaux de suivi</button>
-              </div>
-              <button onclick='window.close()' style='margin-top:3em; padding:1em 2em; font-size:1.2em; background:#dc3545; color:white; border:none; border-radius:5px;'>Éteindre le système</button>
-            </div>`
-        }, 2500);
-      `;
-      document.body.appendChild(bar);
+      setTimeout(() => {
+        document.getElementById("progress-bar").style.width = "100%";
+      }, 100);
+
+      setTimeout(() => {
+        document.body.innerHTML = `
+          <div style='text-align:center; max-width:900px; margin:auto; padding:2em;'>
+            <h2 style='color:#007aff;'>Bienvenue dans le PGI de NUMERAX</h2>
+            <div style='display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1em; margin-top:3em;'>
+              <button style='padding:1em; font-size:1em; border:none; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;'>Facturation</button>
+              <button style='padding:1em; font-size:1em; border:none; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;'>Devis</button>
+              <button style='padding:1em; font-size:1em; border:none; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;'>Comptabilité</button>
+              <button style='padding:1em; font-size:1em; border:none; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;'>Paye</button>
+              <button style='padding:1em; font-size:1em; border:none; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;'>Tableaux de suivi</button>
+            </div>
+            <button onclick='window.close()' style='margin-top:3em; padding:1em 2em; font-size:1.2em; background:#dc3545; color:white; border:none; border-radius:5px;'>Éteindre le système</button>
+          </div>`;
+      }, 2500);
     }
 
     window.onload = function() {
