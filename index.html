@@ -180,11 +180,13 @@
       document.body.appendChild(bar);
     }
 
-    printAnimatedLine("> INITIALISATION DU SYSTEME D'INFORMATION EN COURS...", () => {
-      setTimeout(() => printAnimatedLine("> VERIFICATION DES MODULES...", () => {
-        setTimeout(askRiddle, 1000);
-      }), 1000);
-    });
+    window.onload = function() {
+      printAnimatedLine("> INITIALISATION DU SYSTEME D'INFORMATION EN COURS...", () => {
+        setTimeout(() => printAnimatedLine("> VERIFICATION DES MODULES...", () => {
+          setTimeout(askRiddle, 1000);
+        }), 1000);
+      });
+    }
   </script>
 </body>
 </html>
