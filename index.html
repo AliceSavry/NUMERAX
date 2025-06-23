@@ -3,102 +3,178 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NUMERAX PGI</title>
+  <title>NUMERAX SYSTEM CONSOLE</title>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      margin: 0;
-      background-color: #f8f9fa;
-      color: #212529;
+      background-color: black;
+      color: #00FF00;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 20px;
     }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 2em;
+    h1 {
+      color: #00FF00;
       text-align: center;
     }
-    .progress {
-      width: 100%;
-      background-color: #e9ecef;
-      border-radius: 5px;
-      overflow: hidden;
-      margin-top: 3em;
+    .console-line {
+      margin: 10px 0;
+      white-space: pre-wrap;
     }
-    .progress-bar {
-      height: 25px;
-      width: 0;
-      background-color: #007aff;
-      transition: width 2s;
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1em;
+      background-color: #00FF00;
+      animation: blink 1s steps(2, start) infinite;
+      vertical-align: bottom;
     }
-    .menu {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1em;
-      margin-top: 3em;
-    }
-    .menu button {
-      padding: 1em;
-      font-size: 1em;
-      border: none;
-      border-radius: 8px;
-      background-color: #ffffff;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    .menu button:hover {
-      background-color: #f1f1f1;
-    }
-    .shutdown-btn {
-      margin-top: 3em;
-      padding: 1em 2em;
-      font-size: 1.2em;
-      background-color: #dc3545;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+    @keyframes blink {
+      to {
+        visibility: hidden;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container" id="main">
-    <h1>NUMERAX SYSTEM CONSOLE</h1>
-    <div id="progress-block" style="display:none">
-      <p>Démarrage du système PGI en cours...</p>
+  <h1>NUMERAX SYSTEM CONSOLE</h1>
+
+  <div id="console-output"></div>
+  <div class="console-line">&gt; <span id="input-line"></span><span class="cursor"></span></div>
+
+  <script>
+    const riddles = [
+      "[ACTIVITÉ] Qui est la Directrice Administrative et Financière responsable du pilotage des données comptables ?",
+      "[ACTIVITÉ] Quel est le nom du flux qui permet d’éditer les documents de synthèse dans le PGI ?",
+      "[ACTIVITÉ] Quel outil avez-vous utilisé pour réaliser les tableaux croisés dynamiques ?",
+      "[ACTIVITÉ] Pour fiabiliser le SIC, quelle priorité avez-vous identifiée dans votre rapport ?",
+      "[ACTIVITÉ] Quel outil avez-vous recommandé d’installer pour prévenir les intrusions dans le système ?",
+      "[ACTIVITÉ] Quel outil est commun à plusieurs activités et permet de construire des indicateurs clés de performance ?"
+    ];
+
+    const expectedCodes = ["SOPHIE", "SYNTHESE", "TABLEUR", "SECURITE", "ANTIVIRUS", "TABLEUR"];
+    let currentStep = 0;
+    let input = "";
+
+    const output = document.getElementById("console-output");
+    const inputLine = document.getElementById("input-line");
+
+    function printAnimatedLine(text) {
+      const div = document.createElement("div");
+      div.className = "console-line";
+      output.appendChild(div);
+      let i = 0;
+      const interval = setInterval(() => {
+        div.textContent += text[i];
+        i++;
+        if (i >= text.length) clearInterval(interval);
+        window.scrollTo(0, document.body.scrollHeight);
+      }, 25);
+    }
+
+    function askRiddle() {
+      printAnimatedLine(`> CODE ${currentStep + 1} REQUIS :`);
+      setTimeout(() => printAnimatedLine(`> ${riddles[currentStep]}`), 1000);
+    }
+
+    function askFinal() {
+      printAnimatedLine("> TOUS LES CODES VALIDES. SAISISSEZ LE MOT DE PASSE FINAL :");
+      setTimeout(() => printAnimatedLine("> [ACTIVITÉ GLOBALE] À partir de tous les éléments trouvés, quel est le nom de l’élément central du SIC que vous venez de réactiver ?"), 1000);
+    }
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Backspace") {
+        input = input.slice(0, -1);
+      } else if (e.key === "Enter") {
+        printAnimatedLine("> " + input);
+        handleInput(input.trim().toUpperCase());
+        input = "";
+      } else if (e.key.length === 1) {
+        input += e.key;
+      }
+      inputLine.textContent = input;
+    });
+
+    function handleInput(code) {
+      if (currentStep < expectedCodes.length) {
+        if (code === expectedCodes[currentStep]) {
+          printAnimatedLine(`> ✔ CODE ${currentStep + 1} VALIDE`);
+          currentStep++;
+          if (currentStep < expectedCodes.length) {
+            setTimeout(askRiddle, 1000);
+          } else {
+            setTimeout(askFinal, 1000);
+          }
+        } else {
+          printAnimatedLine("> ❌ ERREUR : LE MOT-CLÉ N'EST PAS LE BON ! RECOMMENCEZ.");
+        }
+      } else {
+        if (code === "SYSTEME") {
+          bootPGI();
+        } else {
+          printAnimatedLine("> ❌ MOT DE PASSE INCORRECT. RECOMMENCEZ.");
+        }
+      }
+    }
+
+    function bootPGI() {
+      document.body.innerHTML = `
+      <style>
+        body {
+          background-color: #f8f9fa;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+          color: #212529;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+          margin: 0;
+          text-align: center;
+        }
+        .progress {
+          width: 80%;
+          max-width: 400px;
+          background-color: #e9ecef;
+          border-radius: 5px;
+          overflow: hidden;
+          margin-top: 2em;
+        }
+        .progress-bar {
+          height: 25px;
+          width: 0;
+          background-color: #007aff;
+          transition: width 2s;
+        }
+      </style>
+      <h2>Démarrage du PGI NUMERAX...</h2>
       <div class="progress">
         <div class="progress-bar" id="progress-bar"></div>
       </div>
-    </div>
-  </div>
-
-  <script>
-    function showPGI() {
-      document.getElementById("main").innerHTML = `
-        <div class="container">
-          <h2>Bienvenue dans le PGI de NUMERAX</h2>
-          <div class="menu">
-            <button>Facturation</button>
-            <button>Devis</button>
-            <button>Comptabilité</button>
-            <button>Paye</button>
-            <button>Tableaux de suivi</button>
-          </div>
-          <button class="shutdown-btn" onclick="window.close()">Éteindre le système</button>
-        </div>
+      <script>
+        const bar = document.getElementById("progress-bar");
+        setTimeout(() => {
+          bar.style.width = "100%";
+        }, 100);
+        setTimeout(() => {
+          document.body.innerHTML = `
+            <div style='text-align:center; max-width:900px; margin:auto; padding:2em;'>
+              <h2 style='color:#007aff;'>Bienvenue dans le PGI de NUMERAX</h2>
+              <div style='display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1em; margin-top:3em;'>
+                <button style='padding:1em; font-size:1em; border:none; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;'>Facturation</button>
+                <button style='padding:1em; font-size:1em; border:none; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;'>Devis</button>
+                <button style='padding:1em; font-size:1em; border:none; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;'>Comptabilité</button>
+                <button style='padding:1em; font-size:1em; border:none; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;'>Paye</button>
+                <button style='padding:1em; font-size:1em; border:none; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;'>Tableaux de suivi</button>
+              </div>
+              <button onclick='window.close()' style='margin-top:3em; padding:1em 2em; font-size:1.2em; background:#dc3545; color:white; border:none; border-radius:5px;'>Éteindre le système</button>
+            </div>`
+        }, 2500);
+      </script>
       `;
     }
 
-    function simulateBoot() {
-      document.getElementById("progress-block").style.display = "block";
-      const bar = document.getElementById("progress-bar");
-      setTimeout(() => {
-        bar.style.width = "100%";
-      }, 100);
-      setTimeout(showPGI, 2500);
-    }
-
-    simulateBoot();
+    printAnimatedLine("> INITIALISATION DU SYSTEME D'INFORMATION EN COURS...");
+    setTimeout(() => printAnimatedLine("> VERIFICATION DES MODULES..."), 1000);
+    setTimeout(askRiddle, 2000);
   </script>
 </body>
 </html>
